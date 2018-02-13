@@ -1,8 +1,29 @@
-var cacheName = 'WeatherByMeridian';
-var filesToCache = [];
+var cacheName = 'WeatherByMeridianCache_v1.15';
+var filesToCache = [
+  '/',
+  '/index.html',
+  '/scripts/app.js',
+  '/scripts/localforage.min.js',
+  '/scripts/toastr.js',
+  '/styles/style.css',
+  '/styles/toastr.min.css',
+  '/images/clear.png',
+  '/images/cloudy-scattered-showers.png',
+  '/images/cloudy.png',
+  '/images/fog.png',
+  '/images/ic_add_white_24px.svg',
+  '/images/ic_refresh_white_24px.svg',
+  '/images/partly-cloudy.png',
+  '/images/rain.png',
+  '/images/scattered-showers.png',
+  '/images/sleet.png',
+  '/images/snow.png',
+  '/images/thunderstorm.png',
+  '/images/wind.png'
+];
 
 /* 
- * Caching all the required files once this service worker is installed in the client browser.
+ * Cache all the required files once this service worker is installed in the client browser.
  */
 // Here 'self' refers to 'window.self' & 'e'refers to event paramter of class 'Extendable Event'. 
 // Refer below link for difference between 'self' and 'this' keyword : 
@@ -30,7 +51,7 @@ self.addEventListener('install', function(e) {
   });
 
 /* 
- * Updating the app shell cache (by deleting old cached files) with new changes once 
+ * Update the app shell cache (by deleting old cached files) with new changes once 
  * this service worker is activated.
  */  
 self.addEventListener('activate', function(e) {
@@ -55,4 +76,24 @@ self.addEventListener('activate', function(e) {
 	// The claim() method causes those pages to be controlled immediately so that the caches 
 	// would be updated immediately.
     return self.clients.claim();  
+});
+
+/*
+ * Serve the app shell from local cache by re-defining the action that should happen
+ * on browser's default fetch request. 
+ */
+self.addEventListener('fetch', function(e) {
+  // The request read-only property of the FetchEvent interface returns the Request that 
+  // triggered the event handler.		
+  console.log('[ServiceWorker] Fetch', e.request.url);
+  // The respondWith() method of FetchEvenst prevents the browser's default fetch handling,
+  // and allows you to provide a promise for a Response yourself.
+  // Here, This promise resolves to see if the file requested in fetch request is present in 
+  // in the cache [using caches.match()] and returns a 'file' or 'undefind' as a response.      
+  // If no match is found, the code fetches a response from the network.
+  e.respondWith(
+    caches.match(e.request).then(function(response) {
+      return response || fetch(e.request);
+    })
+  );
 });
