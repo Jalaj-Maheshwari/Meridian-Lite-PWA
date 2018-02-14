@@ -7,6 +7,7 @@
   <!-- Setting the web page dimensions based on user's screen size ie mobile or Desktop using the viewport attribute. The initial-scale=1.0 part sets the initial zoom level when the page is first loaded by the browser -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="PWA for Meridian">
+
   <title>Weather by Meridian</title>
   <link rel="stylesheet" type="text/css" href="/styles/style.css">
   <!-- css for displaying toast messages -->
@@ -149,7 +150,7 @@
     <svg viewBox="0 0 32 32" width="32" height="32">
       <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
     </svg>
-  </div>
+  </div>  
   <!-- script for downloading jquery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <!-- script for Location Autocomplete feature -->
@@ -158,7 +159,7 @@
   <script type="text/javascript" src="/scripts/toastr.js" async></script>
   <!-- LocalForage Script -->
   <script src="/scripts/localforage.min.js"></script>
-  <!-- async attribute specifies that the script will be executed asynchronously as soon as it is available ie the execution of app.js file will be done independently of request-responses for html and css files & all the code below this line will be made to excecuted and not kept to wait (which is typically done when the execution follows a synchronous pattern) until the response for app.js file and related functionalites in that are obtained by the server. --> 
+  <!-- async attribute specifies that the script will be executed asynchronously as soon as it is available ie the execution of app.js file will be done independently of request-responses for html and css files & all the code below this line will be made to excecuted and not kept to wait (which is typically done when the execution follows a synchronous pattern) until the response for app.js file and related functionalites in that are obtained by the server --> 
   <script src="/scripts/app.js" async></script>  
 </body>
 </html>

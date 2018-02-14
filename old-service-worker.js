@@ -1,4 +1,4 @@
-var cacheName = 'WeatherByMeridianCache_v1.15';
+var cacheName = 'WeatherByMeridianCache_v1.17';
 var filesToCache = [
   '/',
   '/index.html',
