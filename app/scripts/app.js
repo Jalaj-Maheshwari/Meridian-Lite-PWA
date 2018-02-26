@@ -44,14 +44,18 @@
   /* Event listener for add new city button */
   document.getElementById('butAdd').addEventListener('click', function() {
     // Open/show the add new city dialog
-    app.toggleAddDialog(true);
+    app.toggleAddDialog(true);  
   });
 
-  /* Implementing the Location Autocomplete feature */    
+  /* Implementing the Location Autocomplete feature only if internet connection exists*/  
+  if (navigator.onLine) {    
     google.maps.event.addDomListener(window, 'load', function () {
-      new google.maps.places.Autocomplete(document.getElementById('userInput'));
-    });
-
+      if (navigator.onLine) {
+        new google.maps.places.Autocomplete(document.getElementById('userInput'));        
+      }     
+    }); 
+  } 
+    
   /* Event listener for add city button in add city dialog */
   document.getElementById('butAddCity').addEventListener('click', function() {
     // Fetching the newly entered location
@@ -110,7 +114,7 @@
       app.addDialog.classList.remove('dialog-container--visible');
     }
   };
-
+  
   // Updates a weather card with the latest weather forecast. If the card
   // doesn't already exist, it's cloned from the template.
   // 'data', is the API response.  
@@ -280,7 +284,7 @@
                 app.savePreferredLocations(); 
               }
             }  
-        }
+        } 
       } 
     }; 
   };
@@ -409,6 +413,7 @@
     app.savePreferredLocations();
     */
 
+
   // Checking if the browser supports service workers and registering if it does. 
   if ('serviceWorker' in navigator) {
   // Delay registration until after the page has loaded, to ensure that our
@@ -452,6 +457,6 @@
       console.error('Error during service worker registration:', e);
       });
   });
-  }  
+  }
 })();
 
