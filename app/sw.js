@@ -129,7 +129,7 @@ var stripIgnoredUrlParameters = function (originalUrl,
   };
 
 
-var hashParamName = '_sw-precache';
+var hashParamName = '_sw-precache'
 var urlsToCacheKeys = new Map(
   precacheConfig.map(function(item) {
     var relativeUrl = item[0];
@@ -208,6 +208,40 @@ self.addEventListener('activate', function(event) {
 
 
 self.addEventListener('fetch', function(event) {
+  console.log('[Service Worker] Fetch', event.request.url);
+  var dataUrl = 'https://query.yahooapis.com/v1/public/yql';
+  if (event.request.url.indexOf(dataUrl) > -1) {
+    /*
+     * When the request URL contains dataUrl, the app is asking for fresh
+     * weather data. In this case, the service worker always goes to the
+     * network and then caches the response. This is called the "Cache then
+     * network" strategy:
+     * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
+     */
+    event.respondWith(
+      caches.open(cacheName).then(function(cache) {
+        return fetch(event.request).then(function(response){
+          cache.put(event.request.url, response.clone());
+          console.log(response.query.results);
+          return response;
+        });
+      })
+    );
+  } 
+    /*
+     * The app is asking for app shell files. In this scenario the app uses the
+     * "Cache, falling back to the network" offline strategy:
+     * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
+     */
+  /* else {
+    
+    event.respondWith(
+      caches.match(event.request).then(function(response) {
+        return response || fetch(event.request);
+      })
+    );
+  } */
+
   if (event.request.method === 'GET') {
     // Should we call event.respondWith() inside this fetch event handler?
     // This needs to be determined synchronously, which will give other fetch
