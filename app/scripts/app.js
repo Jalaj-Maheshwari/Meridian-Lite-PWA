@@ -261,6 +261,7 @@
         if (request.status === 200) {
           var response = JSON.parse(request.response);   
           // Fetching results from desired attribute in API response. 
+          console.log(response);
           var results = response.query.results;
           // alerting user for invalid location        
           if (!results) {

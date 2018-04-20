@@ -222,7 +222,6 @@ self.addEventListener('fetch', function(event) {
       caches.open(cacheName).then(function(cache) {
         return fetch(event.request).then(function(response){
           cache.put(event.request.url, response.clone());
-          console.log(response.query.results);
           return response;
         });
       })
