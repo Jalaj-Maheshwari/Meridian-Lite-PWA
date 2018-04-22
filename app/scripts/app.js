@@ -244,6 +244,25 @@
     var statement = "select * from weather.forecast where woeid in" + 
                     "(select woeid from geo.places(1) where text='" + location + "') and u='c'";
     var url = 'https://query.yahooapis.com/v1/public/yql?format=json&q=' + statement;
+    
+     if ('caches' in window) {
+      /*
+       * Check if the service worker has already cached this city's weather
+       * data. If the service worker has the data, then display the cached
+       * data while the app fetches the latest data via the XmlHttpRequest.
+       */
+      caches.match(url).then(function(response) {
+        if (response) {
+          response.json().then(function updateFromCache(json) {
+            var results = json.query.results;
+            results.location = location;
+            results.created = json.query.created;
+            app.updateForecastCard(results);
+          });
+        }
+      });
+    }
+
     // Fetch the latest data.
     // Make the XHR to get the data, then update the card
     var request = new XMLHttpRequest();
