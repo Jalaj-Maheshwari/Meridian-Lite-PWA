@@ -15,6 +15,7 @@
     spinner: document.querySelector('.loader'),
     cardTemplate: document.querySelector('.cardTemplate'),
     container: document.querySelector('.main'),
+    aqi: document.querySelector('.aqi'),
     addDialog: document.querySelector('.dialog-container'),
     daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   };
@@ -93,6 +94,7 @@
 
   });
 
+  
 
   /*****************************************************************************
    * Methods to update/refresh the UI
@@ -223,6 +225,7 @@
     }
   };
 
+  console.log(app.container);
   /*****************************************************************************
    * Methods for dealing with the model
    ****************************************************************************/
@@ -433,7 +436,7 @@
     app.savePreferredLocations();
     */
 
-
+   /* 
   // Checking if the browser supports service workers and registering if it does. 
   if ('serviceWorker' in navigator) {
   // Delay registration until after the page has loaded, to ensure that our
@@ -477,6 +480,21 @@
       console.error('Error during service worker registration:', e);
       });
   });
-  }
+  }*/
+ document.getElementById('weather').addEventListener('click', function() {
+      app.aqi.setAttribute('hidden', true);
+      //console.log(app.aqi);
+      app.container.removeAttribute('hidden');
+      //app.spinner.removeAttribute('hidden');
+      //document.write("hr")
+    });
+
+  document.getElementById('aqi').addEventListener('click', function() {
+      app.container.setAttribute('hidden', true);
+      //console.log(app.aqi);
+      app.aqi.removeAttribute('hidden');
+      //app.spinner.removeAttribute('hidden');
+      //document.write("hr")
+    });
 })();
 

@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="PWA for Meridian">
 
-  <title>Weather by Meridian</title>
+  <title>Meridian Lite</title>
   <link rel="stylesheet" type="text/css" href="/styles/style.css">
   <!-- css for displaying toast messages -->
   <link rel="stylesheet" type="text/css" href="/styles/toastr.min.css">
@@ -22,17 +22,21 @@
   <!-- Tile Icon for Windows -->
   <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
   <meta name="msapplication-TileColor" content="#2F3BA2">
+
 </head>
 <body>
 
   <header class="header">
-    <h1 class="header__title">Weather by Meridian</h1>
+    <h1 class="header__title">Meridian Lite</h1>
     <!-- The aria-label atribute is used to display an action like a 'X' button rather than writing 'close tab' to hint the users of what a particular button is intended to do. It is a Web Accessibility Standard. --> 
     <button id="butRefresh" class="headerButton" aria-label="Refresh"></button>
     <button id="butAdd" class="headerButton" aria-label="Add"></button>
+  <button id="weather">Weather</button>
+  <button id="aqi">AQI</button>
   </header>
 
-  <main class="main">
+  <div class="main" hidden>
+
     <!-- 3 different classes card, cardTemplate & weather-forecast -->
     <!-- hidden attribute will be removed, once the user decides to add a new City Card --> 
     <div class="card cardTemplate weather-forecast" hidden>  
@@ -138,8 +142,11 @@
         </div>
       </div>
     </div>
-  </main>
+  </div>
 
+  <div class="aqi" hidden>
+    <p> This is AQI </p>  
+  </div>  
   <div class="dialog-container">
     <div class="dialog">
       <center>    
