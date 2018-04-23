@@ -14,7 +14,9 @@
     // 'loader' in index.html webpage (document) file & assigns it to the Spinner sub-variable.
     spinner: document.querySelector('.loader'),
     cardTemplate: document.querySelector('.cardTemplate'),
+    // 'container will hold html of Weather module'
     container: document.querySelector('.main'),
+    // 'aqi' will hold html of AQI module'
     aqi: document.querySelector('.aqi'),
     addDialog: document.querySelector('.dialog-container'),
     daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -94,7 +96,17 @@
 
   });
 
-  
+  /* Toogle display between Weather and AQI module as per user's preference */
+
+  document.getElementById('weather').addEventListener('click', function() {
+      app.aqi.setAttribute('hidden', true);
+      app.container.removeAttribute('hidden');
+    });
+
+  document.getElementById('aqi').addEventListener('click', function() {
+      app.container.setAttribute('hidden', true);
+      app.aqi.removeAttribute('hidden');
+    });
 
   /*****************************************************************************
    * Methods to update/refresh the UI
@@ -481,20 +493,5 @@
       });
   });
   }*/
- document.getElementById('weather').addEventListener('click', function() {
-      app.aqi.setAttribute('hidden', true);
-      //console.log(app.aqi);
-      app.container.removeAttribute('hidden');
-      //app.spinner.removeAttribute('hidden');
-      //document.write("hr")
-    });
-
-  document.getElementById('aqi').addEventListener('click', function() {
-      app.container.setAttribute('hidden', true);
-      //console.log(app.aqi);
-      app.aqi.removeAttribute('hidden');
-      //app.spinner.removeAttribute('hidden');
-      //document.write("hr")
-    });
 })();
 
