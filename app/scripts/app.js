@@ -32,6 +32,10 @@
    * Event listeners for UI elements
    ****************************************************************************/
 
+  // Setting the default color of AQI category text to gray as default screen 
+  // is Weather Category. 
+  document.getElementById('aqi').style.color="#B0B0B0";
+
   /* Event listener for refresh button */
   document.getElementById('butRefresh').addEventListener('click', function() {
     // Refreshing the forecasts if forecast cards exists
@@ -101,11 +105,16 @@
   document.getElementById('weather').addEventListener('click', function() {
       app.aqi.setAttribute('hidden', true);
       app.container.removeAttribute('hidden');
+      document.getElementById('aqi').style.color="#B0B0B0";
+      document.getElementById('weather').style.color="#FFFFFF";
+
     });
 
   document.getElementById('aqi').addEventListener('click', function() {
       app.container.setAttribute('hidden', true);
       app.aqi.removeAttribute('hidden');
+      document.getElementById('weather').style.color="#B0B0B0";
+      document.getElementById('aqi').style.color="#FFFFFF";
     });
 
   /*****************************************************************************

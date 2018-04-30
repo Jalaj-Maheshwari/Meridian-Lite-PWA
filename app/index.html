@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8"><html>
+
   <!-- Making the app compatible to work in edge mode of IE -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!-- Setting the web page dimensions based on user's screen size ie mobile or Desktop using the viewport attribute. The initial-scale=1.0 part sets the initial zoom level when the page is first loaded by the browser -->
@@ -22,7 +22,13 @@
   <!-- Tile Icon for Windows -->
   <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
   <meta name="msapplication-TileColor" content="#2F3BA2">
-
+  <script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $("table").toggle();
+    });
+});
+</script>
 </head>
 <body>
 
@@ -31,12 +37,12 @@
     <!-- The aria-label atribute is used to display an action like a 'X' button rather than writing 'close tab' to hint the users of what a particular button is intended to do. It is a Web Accessibility Standard. --> 
     <button id="butRefresh" class="headerButton" aria-label="Refresh"></button>
     <button id="butAdd" class="headerButton" aria-label="Add"></button>
-  <button id="weather">Weather</button>
-  <button id="aqi">AQI</button>
+    
   </header>
-
-  <div class="main" hidden>
-
+  <div>
+  <button id="weather" class="category_button">Weather</button><button id="aqi" class="category_button">Air Quality</button>
+  </div>
+  <main class="main">
     <!-- 3 different classes card, cardTemplate & weather-forecast -->
     <!-- hidden attribute will be removed, once the user decides to add a new City Card --> 
     <div class="card cardTemplate weather-forecast" hidden>  
@@ -142,11 +148,84 @@
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
-  <div class="aqi" hidden>
-    <p> This is AQI </p>  
-  </div>  
+  <div class="aqi" hidden> 
+<!--
+      <center><button class="table">Click here to learn about AQI</button></center>
+    <table style="display: none">
+      <tr>
+          <th> AQI </th>
+          <th> Pollution Level </th>
+          <th width="7%"> Color Code </th>
+          <th> Health Implications </th>
+        </tr>
+
+        <tr>
+          <td width="5%"> 0 - 50 </td>
+          <td> Good </td>
+          <td id ="ccdarkgreen"></td>
+          
+        </tr>
+
+        <tr>
+          <td width="5%"> 51 - 100 </td>
+          <td> Moderate </td>
+          <td id ="ccyellow"> </td>
+          
+        </tr>
+
+        <tr>
+          <td width="5%"> 101 - 150 </td>
+          <td> Unhealthy for Sensitive Groups </td>
+          <td id = "ccorange"></td>
+          
+        </tr>
+
+        <tr>
+          <td width="5%"> 151 - 200 </td>
+          <td> Unhealthy </td>
+          <td id = "ccred"></td>
+          
+
+        </tr>
+
+        <tr>
+          <td width="5%"> 201 - 300 </td>
+          <td> Very Unhealthy </td>
+          <td id = "ccpurple"></td>
+          
+        </tr>
+
+        <tr>
+          <td width="5%"> 300+ </td>
+          <td> Hazardous </td>
+          <td id = "ccmaroon"></td>
+        </tr>
+    </table>
+  
+-->
+    <!-- 3 different classes card, cardTemplate & weather-forecast -->
+    <!-- hidden attribute will be removed, once the user decides to add a new City Card --> 
+    <div class="card cardTemplate weather-forecast">  
+    <div class="city-key" ></div>
+    <div class="card-last-updated"></div>
+    <!-- card-last-updated will hold the time when a particular forecast card 
+    was last updated -->
+
+    <div class="location"> Thane, Maharashtra, India</div>  
+    <div class="date">Sun 29 Apr 2018 04:30 PM IST</div><br>
+    <center>
+    <div class="aqi_text"><center>Air Quality Index</center>  </div> 
+    <div class="aqi_index" style="background-color: yellow; font-size: 3em"><center>74</center></div><br>
+    <div class="description" style="font-size:16px"><b>Pollution Level:</b> Moderate</div><br>
+    <div class="dominantpol" style="font-size:16px"><b>Dominant Pollutant:</b> PM 10</div><br>
+    <div class = "health"><center>Health Message</center></div><br>
+    <div  class="precaution"><center>Air quality is considered satisfactory and air pollution poses little or no risk</center></div><br>
+    </center>  
+      </div>
+    </div>
+
   <div class="dialog-container">
     <div class="dialog">
       <center>    
