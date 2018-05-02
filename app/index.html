@@ -22,13 +22,6 @@
   <!-- Tile Icon for Windows -->
   <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
   <meta name="msapplication-TileColor" content="#2F3BA2">
-  <script>
-$(document).ready(function(){
-    $("button").click(function(){
-        $("table").toggle();
-    });
-});
-</script>
 </head>
 <body>
 
@@ -39,9 +32,7 @@ $(document).ready(function(){
     <button id="butAdd" class="headerButton" aria-label="Add"></button>
     
   </header>
-  <div>
-  <button id="weather" class="category_button">Weather</button><button id="aqi" class="category_button">Air Quality</button>
-  </div>
+ 
   <main class="main">
     <!-- 3 different classes card, cardTemplate & weather-forecast -->
     <!-- hidden attribute will be removed, once the user decides to add a new City Card --> 
@@ -53,6 +44,11 @@ $(document).ready(function(){
       <div class="location"></div>
       <div class="date"></div>
       <div class="description"></div>
+      <br>
+      <div class="text">
+        <center>Weather</center> 
+      </div>
+      <br>
       <div class="current">
         <div class="visual">
           <div class="icon"></div>
@@ -64,7 +60,8 @@ $(document).ready(function(){
             </div>
           </div>             
         </div>
-        <div class="description">
+          <div class="description">
+          <br>
           <div class="humidity"></div>
           <div class="wind">
             <span class="value"></span>
@@ -73,7 +70,7 @@ $(document).ready(function(){
           </div>
           <div class="sunrise"></div>
           <div class="sunset"></div>
-        </div>
+          </div> 
       </div>
       <div class="future">
         <div class="oneday">
@@ -147,10 +144,20 @@ $(document).ready(function(){
           </div>
         </div>
       </div>
+      <br>
+      <center>
+      <div class="text">Air Quality Index</div><br>
+      <div class="aqi-index" style="font-size: 3em"><center></center></div><br>
+      <div class="aqi-description">
+      <div class="pollution-level"></div>
+      <div class="dominant-pol"></div><br>
+      </div>
+      <div class ="text">Health Message</div><br>
+      <div  class="health-message"><center>Air quality is considered satisfactory and air pollution poses little or no risk</center></div><br>
+
     </div>
   </main>
 
-  <div class="aqi" hidden> 
 <!--
       <center><button class="table">Click here to learn about AQI</button></center>
     <table style="display: none">
@@ -205,27 +212,6 @@ $(document).ready(function(){
     </table>
   
 -->
-    <!-- 3 different classes card, cardTemplate & weather-forecast -->
-    <!-- hidden attribute will be removed, once the user decides to add a new City Card --> 
-    <div class="card cardTemplate weather-forecast">  
-    <div class="city-key" ></div>
-    <div class="card-last-updated"></div>
-    <!-- card-last-updated will hold the time when a particular forecast card 
-    was last updated -->
-
-    <div class="location"> Thane, Maharashtra, India</div>  
-    <div class="date">Sun 29 Apr 2018 04:30 PM IST</div><br>
-    <center>
-    <div class="aqi_text"><center>Air Quality Index</center>  </div> 
-    <div class="aqi_index" style="background-color: yellow; font-size: 3em"><center>74</center></div><br>
-    <div class="description" style="font-size:16px"><b>Pollution Level:</b> Moderate</div><br>
-    <div class="dominantpol" style="font-size:16px"><b>Dominant Pollutant:</b> PM 10</div><br>
-    <div class = "health"><center>Health Message</center></div><br>
-    <div  class="precaution"><center>Air quality is considered satisfactory and air pollution poses little or no risk</center></div><br>
-    </center>  
-      </div>
-    </div>
-
   <div class="dialog-container">
     <div class="dialog">
       <center>    
@@ -255,6 +241,13 @@ $(document).ready(function(){
   <!-- LocalForage Script -->
   <script src="/scripts/localforage.min.js"></script>
   <!-- async attribute specifies that the script will be executed asynchronously as soon as it is available ie the execution of app.js file will be done independently of request-responses for html and css files & all the code below this line will be made to excecuted and not kept to wait (which is typically done when the execution follows a synchronous pattern) until the response for app.js file and related functionalites in that are obtained by the server --> 
-  <script src="/scripts/app.js" async></script>  
+  <script src="/scripts/app.js" async></script>
+  <!--<script>
+  $(document).ready(function(){
+    $("button").click(function(){
+        $("table").toggle();
+    });
+  });
+  </script>-->  
 </body>
 </html>

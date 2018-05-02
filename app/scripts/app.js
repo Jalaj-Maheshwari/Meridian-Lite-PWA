@@ -1,11 +1,9 @@
 (function() {
-
   // Strict mode helps out in a couple ways:
   // 1. It catches some common coding bloopers, throwing exceptions.
   // 2. It prevents, or throws errors, when relatively "unsafe" actions are taken 
   // (such as gaining access to the global object).  
   'use strict';
-
   var app = {
     isLoading: true,
     visibleCards: {},
@@ -16,8 +14,6 @@
     cardTemplate: document.querySelector('.cardTemplate'),
     // 'container will hold html of Weather module'
     container: document.querySelector('.main'),
-    // 'aqi' will hold html of AQI module'
-    aqi: document.querySelector('.aqi'),
     addDialog: document.querySelector('.dialog-container'),
     daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   };
@@ -28,13 +24,15 @@
       "timeOut": "1500"
     }
 
+   var location, results, lat, long, callFromAddCityDialog = false;; 
+
   /*****************************************************************************
    * Event listeners for UI elements
    ****************************************************************************/
 
   // Setting the default color of AQI category text to gray as default screen 
   // is Weather Category. 
-  document.getElementById('aqi').style.color="#B0B0B0";
+  //document.getElementById('aqi').style.color="#B0B0B0";
 
   /* Event listener for refresh button */
   document.getElementById('butRefresh').addEventListener('click', function() {
@@ -81,7 +79,9 @@
         }
         // Sending a 'true' parameter inorder to ensure that 'Location added Successfully'
         // message is only shown in such a condition and not during card refresh situation.
-        app.getForecast(location,true);      
+        app.getForecast(location);    
+        callFromAddCityDialog = true; 
+        app.toggleAddDialog(false); 
       }  
   });
 
@@ -101,7 +101,7 @@
   });
 
   /* Toogle display between Weather and AQI module as per user's preference */
-
+  /*
   document.getElementById('weather').addEventListener('click', function() {
       app.aqi.setAttribute('hidden', true);
       app.container.removeAttribute('hidden');
@@ -116,6 +116,7 @@
       document.getElementById('weather').style.color="#B0B0B0";
       document.getElementById('aqi').style.color="#FFFFFF";
     });
+  */
 
   /*****************************************************************************
    * Methods to update/refresh the UI
@@ -164,7 +165,7 @@
       card.classList.remove('cardTemplate');
       card.querySelector('.location').textContent = data.location;
       card.removeAttribute('hidden');
-      app.container.appendChild(card);
+      app.container.insertBefore(card, app.container.childNodes[0]);
       app.visibleCards[data.location] = card;
       // example of visibleCards variable after the above line is executed below- 
       // {austin: div.card.weather-forecast, boston: div.card.weather-forecast}
@@ -236,8 +237,14 @@
           Math.round(daily.high);
         nextDay.querySelector('.temp-low .value').textContent =
           Math.round(daily.low);
-      };
+      }
     }
+    card.querySelector('.aqi-index').textContent = data.aqi;
+    // add background & text color as per AQI levels using css.
+    card.querySelector('.aqi-index').classList.add(data.pollutionLevelColor);
+    card.querySelector('.pollution-level').textContent = data.pollutionLevel;
+    card.querySelector('.dominant-pol').textContent = data.dominantPol; 
+    card.querySelector('.health-message').textContent = data.healthMessage;
     // Hide the Loading spinner when the first forecast card ever, is done loading with details.
     if (app.isLoading) {
       app.spinner.setAttribute('hidden', true);
@@ -246,7 +253,6 @@
     }
   };
 
-  console.log(app.container);
   /*****************************************************************************
    * Methods for dealing with the model
    ****************************************************************************/
@@ -263,12 +269,12 @@
    * inorder to display appropriate user message. 
    */
   
-  app.getForecast = function(location, callFromAddCityDialog) {
+  app.getForecast = function(location) {
     // Details: https://developer.yahoo.com/weather/ 
     var statement = "select * from weather.forecast where woeid in" + 
                     "(select woeid from geo.places(1) where text='" + location + "') and u='c'";
     var url = 'https://query.yahooapis.com/v1/public/yql?format=json&q=' + statement;
-    
+
      if ('caches' in window) {
       /*
        * Check if the service worker has already cached this city's weather
@@ -299,38 +305,106 @@
       // eg: 1=="1" returns true, due to auto type conversion (typecasting).
       // 1==="1" returns false, because they are of a different type before typecasting.
       // XMLHttpRequest.DONE means that opeartion of downloading data from server is complete.
-      
       if (request.readyState === XMLHttpRequest.DONE) {
         if (request.status === 200) {
           var response = JSON.parse(request.response);   
           // Fetching results from desired attribute in API response. 
-          console.log(response);
-          var results = response.query.results;
+          results = response.query.results;
           // alerting user for invalid location        
           if (!results) {
             toastr.error("Looks like an incorrect location");
             return;
-          } else {
-              // Adding a new attribute location in results so as to use it later to fill the 
-              // Location entry in the card by referencing it ie. data.location
-              // Note: We can define any new field to results eg: results.example = "PWA"; 
-              results.location = location;
-              results.created = response.query.created;
-              app.updateForecastCard(results);
-              if(callFromAddCityDialog) { 
-                toastr.success("Location Successfully Added"); 
-                app.toggleAddDialog(false);  
-              }
+          } else {                        
+              lat = parseFloat(results.channel.item.lat);
+              long = parseFloat(results.channel.item.long);
               // Adding the new location into user preferences of locations for which user needs 
               // to get weather details only if its not duplicate.
-              if(app.preferredLocations.indexOf(location) === -1) { 
+            results.location = location;
+            results.created = response.query.created;    
+            app.fetchAQIForecasts(location, results, lat, long);    
+            }    
+          }
+        }    
+    };
+  };  
+    
+  app.fetchAQIForecasts = function(location, results, lat, long){  
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://api.airvisual.com/v2/nearest_city?lat='+lat+'&lon='+long+'&key=wa9cXcFDafXxDK3GW');
+    request.send();
+    var aqiResponse;
+    request.onreadystatechange = function(){ 
+      if (request.readyState === XMLHttpRequest.DONE) { 
+          if (request.status === 404 || request.status === 403) {
+            toastr.options = {
+               "positionClass": "toast-bottom-center",
+               "timeOut": "2500"
+            }
+            toastr.info("The information source for requested location looks down right now. Please try again later!");
+          }
+          else if (request.status === 200) {
+                aqiResponse = JSON.parse(request.response);  
+                // Storing AQI information
+                results.aqi = aqiResponse.data.current.pollution.aqius;
+                // Storing Dominant Pollutant information
+                results.dominantPol = aqiResponse.data.current.pollution.mainus.toUpperCase();
+                // Defining proper pollutant value
+                if (results.dominantPol == "P1")
+                    results.dominantPol = "PM 10";
+                if (results.dominantPol == "P2")
+                    results.dominantPol = "PM 2.5";
+                if (results.dominantPol == "CO")
+                    results.dominantPol = "Carbon Monoxide";
+                if (results.dominantPol == "O3")
+                    results.dominantPol = "Ozone";
+                if (results.dominantPol == "S2")
+                    results.dominantPol = "Sulphur Dioxide";
+                if (results.dominantPol == "N2")
+                    results.dominantPol = "Nitrogen Dioxide";                  
+                // Storing Pollution Level information
+                if ((0 <= results.aqi) && (results.aqi <= 50)){ 
+                    results.pollutionLevel = "Good";
+                    // for color indication on forecast card.
+                    results.pollutionLevelColor = "green";
+                    results.healthMessage = "Air quality is considered satisfactory, and air pollution poses little or no risk.";
+                    }  
+                else if ((51 <= results.aqi) && (results.aqi <= 100)){ 
+                    results.pollutionLevel = "Moderate";
+                    results.pollutionLevelColor = "yellow";
+                    results.healthMessage ="Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.";
+                }  
+                else if ((101 <= results.aqi) && (results.aqi <= 150)){ 
+                   results.pollutionLevel = "Unhealthy for Sensitive Groups";
+                   results.pollutionLevelColor = "orange";
+                   results.healthMessage = "Members of sensitive groups may experience health effects. The general public is not likely to be affected.";
+                }  
+                else if ((151 <= results.aqi) && (results.aqi <= 200)){ 
+                   results.pollutionLevel = "Unhealthy";
+                   results.pollutionLevelColor = "red";
+                   results.healthMessage = "Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects.";  
+                }
+                else if ((201 <= results.aqi) && (results.aqi <= 300)){ 
+                   results.pollutionLevel = "Very Unhealthy";
+                   results.pollutionLevelColor = "purple";
+                   results.healthMessage = "Health alert: everyone may experience more serious health effects.";
+                }
+                else if ((301 <= results.aqi) && (results.aqi <= 500)){ 
+                   results.pollutionLevel = "Hazardous";
+                   results.pollutionLevelColor = "maroon"; 
+                }
+                app.updateForecastCard(results);
+                if(callFromAddCityDialog) {
+                  toastr.success("Location Successfully Added");
+                  callFromAddCityDialog = false;
+                }
+                // Savng user preferances for locations.
+                if(app.preferredLocations.indexOf(location) === -1) { 
                 app.preferredLocations.push(location);
                 app.savePreferredLocations(); 
               }
-            }  
-        } 
-      } 
-    }; 
+          }
+      }
+    };      
   };
 
   // Iterate all of the cards and attempt to get the latest forecast data
@@ -436,6 +510,7 @@
       if (locationList) {
         // No need to use JSON.parse() as data is fetched from LocalForage in String format.
         app.preferredLocations = locationList;
+        callFromAddCityDialog = false;
         app.preferredLocations.forEach(function(location) {
           app.getForecast(location);
         });
@@ -502,5 +577,12 @@
       });
   });
   }*/
+
+/*$(document).ready(function(){
+    $("button").click(function(){
+        $("table").toggle();
+    });
+  });
+*/
 })();
 
