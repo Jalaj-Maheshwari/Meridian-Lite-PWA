@@ -157,61 +157,7 @@
 
     </div>
   </main>
-
-<!--
-      <center><button class="table">Click here to learn about AQI</button></center>
-    <table style="display: none">
-      <tr>
-          <th> AQI </th>
-          <th> Pollution Level </th>
-          <th width="7%"> Color Code </th>
-          <th> Health Implications </th>
-        </tr>
-
-        <tr>
-          <td width="5%"> 0 - 50 </td>
-          <td> Good </td>
-          <td id ="ccdarkgreen"></td>
-          
-        </tr>
-
-        <tr>
-          <td width="5%"> 51 - 100 </td>
-          <td> Moderate </td>
-          <td id ="ccyellow"> </td>
-          
-        </tr>
-
-        <tr>
-          <td width="5%"> 101 - 150 </td>
-          <td> Unhealthy for Sensitive Groups </td>
-          <td id = "ccorange"></td>
-          
-        </tr>
-
-        <tr>
-          <td width="5%"> 151 - 200 </td>
-          <td> Unhealthy </td>
-          <td id = "ccred"></td>
-          
-
-        </tr>
-
-        <tr>
-          <td width="5%"> 201 - 300 </td>
-          <td> Very Unhealthy </td>
-          <td id = "ccpurple"></td>
-          
-        </tr>
-
-        <tr>
-          <td width="5%"> 300+ </td>
-          <td> Hazardous </td>
-          <td id = "ccmaroon"></td>
-        </tr>
-    </table>
-  
--->
+  <div style="width:500px;height:100px;border:1px solid #000;">Hi there! It seems quite lonely out here :(   Please add a location using the '+' on the top right corner of the screen :)  </div>
   <div class="dialog-container">
     <div class="dialog">
       <center>    
@@ -227,12 +173,12 @@
     </div>
   </div>
 
-  <div class="loader">
-    <!-- Scalable Vector Graphics (SVG) image used to scale the spinner as per needs without losing its quality. Viewbox attribute defines how all the lengths and coordinates used inside the SVG should be scaled to fit the total space available and also defines the viewbox width/height to normal svg width/height aspect ratio.-->
+<!--  <div class="loader">
+    <Scalable Vector Graphics (SVG) image used to scale the spinner as per needs without losing its quality. Viewbox attribute defines how all the lengths and coordinates used inside the SVG should be scaled to fit the total space available and also defines the viewbox width/height to normal svg width/height aspect ratio.>
     <svg viewBox="0 0 32 32" width="32" height="32">
       <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
     </svg>
-  </div>  
+  </div> --> 
   <script src="/scripts/jquery-3.3.1.min.js"></script>
   <!-- script for Location Autocomplete feature -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR1nQEMxdBtNB0oJQ4EIZqFq0lN5kPCvA&libraries=places"></script>
@@ -242,12 +188,5 @@
   <script src="/scripts/localforage.min.js"></script>
   <!-- async attribute specifies that the script will be executed asynchronously as soon as it is available ie the execution of app.js file will be done independently of request-responses for html and css files & all the code below this line will be made to excecuted and not kept to wait (which is typically done when the execution follows a synchronous pattern) until the response for app.js file and related functionalites in that are obtained by the server --> 
   <script src="/scripts/app.js" async></script>
-  <!--<script>
-  $(document).ready(function(){
-    $("button").click(function(){
-        $("table").toggle();
-    });
-  });
-  </script>-->  
 </body>
 </html>

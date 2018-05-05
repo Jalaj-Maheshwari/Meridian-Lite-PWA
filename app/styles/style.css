@@ -111,6 +111,7 @@ body {
       -ms-flex: 1;
           flex: 1; }
 
+/*
 .category_button{
   display: inline;
   background: #3F51B5;
@@ -123,7 +124,7 @@ body {
   cursor: pointer;
   margin-top: 57px;
   border: 1px solid #FFFFFF;
-}          
+} */         
 
 .loader {
   left: 50%;
