@@ -7,11 +7,13 @@
   var app = {
     isLoading: true,
     visibleCards: {},
+    callFromAddCityDialog : false,
     preferredLocations: [], 
     preferredLocationLatLong: [],
     // querySelector(), on highest level, returns all the HTML code content defined for class 
     // 'loader' in index.html webpage (document) file & assigns it to the Spinner sub-variable.
-    spinner: document.querySelector('.loader'),
+    //spinner: document.querySelector('.loader'),
+    introMessage: document.querySelector('.intro-message'),
     cardTemplate: document.querySelector('.cardTemplate'),
     // 'container will hold html of Weather module'
     container: document.querySelector('.main'),
@@ -23,14 +25,11 @@
   toastr.options = {
     "positionClass": "toast-bottom-center",
      "timeOut": "2500"
-  }
-
-  var results, callFromAddCityDialog = false; 
-
+  } 
   /*****************************************************************************
    * Event listeners for UI elements
    ****************************************************************************/
-
+    
   /* Event listener for refresh button */
   document.getElementById('butRefresh').addEventListener('click', function() {
     // Refreshing the forecasts if forecast cards exists
@@ -59,7 +58,7 @@
 
   if(!navigator.onLine)
     toastr.info("App is in offline mode");
-    
+
   /* Event listener for add city button in add city dialog */
   document.getElementById('butAddCity').addEventListener('click', function() {
     // Fetching the newly entered location
@@ -84,8 +83,10 @@
             app.savePreferredLocations(); 
         }
         app.getForecast(location);    
-        callFromAddCityDialog = true; 
+        app.callFromAddCityDialog  = true; 
         app.toggleAddDialog(false); 
+        // Hiding the intro Message
+        app.introMessage.setAttribute('hidden', true);
       }  
   });
 
@@ -99,7 +100,8 @@
     // Make spinner visible if a cancel button of AddCity Dialog is clicked and user has 
     // not entered any location ie. the app comes back to its default Loading state.
     if(app.isLoading){
-      app.spinner.removeAttribute('hidden');
+      //app.spinner.removeAttribute('hidden');
+      app.introMessage.removeAttribute('hidden');
     }
 
   });
@@ -118,8 +120,8 @@
       // "dialog-container") visible & gives the'+'(AddCity) button the sense to respond 
       // to the the touch events.    
       app.addDialog.classList.add('dialog-container--visible');
-      // Hide the Spinner
-      //app.spinner.setAttribute('hidden', true);
+      // Hide the Intro Message.
+      app.introMessage.setAttribute('hidden', true);
     } else {
       app.addDialog.classList.remove('dialog-container--visible');
     }
@@ -223,9 +225,9 @@
           Math.round(daily.low);
       }
     }
-    // Hide the Loading spinner when the first forecast card ever, is done loading with details.
+    // Hide the Intro Messagewhen the first forecast card ever, is done loading with details.
     if (app.isLoading) {
-      app.spinner.setAttribute('hidden', true);
+      app.introMessage.setAttribute('hidden', true);
       app.container.removeAttribute('hidden');
       app.isLoading = false;
     }
@@ -243,7 +245,7 @@
    * request goes through, then the card gets updated a second time with the
    * freshest data.
    * @param Location : location entered by User.
-   * @param callFromAddCityDialog : to determine the component which called the method
+   * @param app.callFromAddCityDialog  : to determine the component which called the method
    * inorder to display appropriate user message. 
    */
   app.getForecast = function(location) {
@@ -379,7 +381,7 @@
    */
   app.fetchAQIForecasts = function(location, lat, long){  
     var request = new XMLHttpRequest();
-    var url = 'https://api.airvisual.com/v2/nearest_city?lat='+lat+'&lon='+long+'&key=wa9cXcFDafXxDK3GW';
+    var url = 'https://api.airvisual.com/v2/nearest_city?lat='+lat+'&lon='+long+'&key=NesSiALyvM6HMhnCi';
     if('caches' in window) {
         caches.match(url).then(function(response) {  
         if(response){
@@ -404,9 +406,9 @@
             aqiResponse = JSON.parse(request.response);  
             // Setting the results in the AQI art of forecast card.
             app.configureAqiUI(location, aqiResponse);
-            if(callFromAddCityDialog) {
+            if(app.callFromAddCityDialog ) {
               toastr.success("Location Successfully Added");
-              callFromAddCityDialog = false;
+              app.callFromAddCityDialog  = false;
             }       
           }
       }
@@ -510,18 +512,31 @@
     window.localforage.setItem('preferredLocations',app.preferredLocations);
   };
 
+
   // err to instantiate an error object inroder to throw any runtime error.
   // 'preferredLocations' passed as 'LocationList'
   window.localforage.getItem('preferredLocations', function(err, locationList) {
     if (locationList) {
+      if(navigator.onLine) {
+        toastr.options = {
+          "positionClass": "toast-bottom-center",
+          "timeOut": "1000"
+        }
+        toastr.info("Loading recent forecast data!");
+      }
+      app.introMessage.setAttribute("hidden", true);
+      //app.spinner.setAttribute("hidden");  
       // No need to use JSON.parse() as data is fetched from LocalForage in String format.
       app.preferredLocations = locationList;
       // Muting the toastr notification for addition of new cards.
-      callFromAddCityDialog = false;
+      app.callFromAddCityDialog  = false;
       app.preferredLocations.forEach(function(location) {
         app.getForecast(location); 
       });
-    }    
+    } else {
+      app.introMessage.removeAttribute("hidden", true);
+      //app.spinner.setAttribute("hidden",true);
+    }
   });
    
   /* Every time the app is accessed, user's locations has to be saved using IP lookup 
