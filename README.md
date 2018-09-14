@@ -1,3 +1,3 @@
 # Meridian Lite
 
-Progressive Web App for Weather & Air Quality Index Updates.
+Progressive Web Application for Weather & Air Quality Index Updates.
